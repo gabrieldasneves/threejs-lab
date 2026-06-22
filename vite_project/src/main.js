@@ -1,60 +1,50 @@
-import './style.css'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
+import * as THREE from "three";
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+const canvas = document.getElementById("canvas");
 
-<div class="ticks"></div>
+// scene
+const scene = new THREE.Scene();
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+scene.background = new THREE.Color("#5f5f5f");
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+// camera
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000,
+);
+camera.position.z = 5;
+scene.add(camera);
 
-setupCounter(document.querySelector('#counter'))
+// object
+const dodecahedronGeometry = new THREE.DodecahedronGeometry(1, 0);
+const dodecahedronMaterial = new THREE.MeshLambertMaterial({
+  color: 0x468f85,
+  emissive: 0x468f85,
+});
+const dodecahedronMesh = new THREE.Mesh(
+  dodecahedronGeometry,
+  dodecahedronMaterial,
+);
+
+const boxGeometry = new THREE.BoxGeometry(2, 0.1, 2);
+const boxMaterial = new THREE.MeshLambertMaterial({
+  color: 0x468f85,
+  emissive: 0x468f85,
+});
+const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+boxMesh.position.y = -2;
+
+scene.add(dodecahedronMesh);
+scene.add(boxMesh);
+
+// light
+const light = new THREE.SpotLight(0xffffff, 1000, 0, Math.PI / 2, 0.1, 1);
+light.position.set(10, 10, 10);
+scene.add(light);
+
+//renderer
+const renderer = new THREE.WebGLRenderer({ canvas });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.render(scene, camera);
