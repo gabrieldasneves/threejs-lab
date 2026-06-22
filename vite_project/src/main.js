@@ -57,3 +57,15 @@ controls.enableDamping = true; //smoother
 controls.dampingFactor = 0.25;
 controls.enableZoom = true;
 controls.enablePan = true;
+
+// animations
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  dodecahedronMesh.rotation.x += 0.01;
+  dodecahedronMesh.rotation.y += 0.01;
+
+  boxMesh.rotation.y += 0.01;
+  renderer.render(scene, camera);
+}
+animate();
